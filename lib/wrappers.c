@@ -56,16 +56,20 @@ int Accept(int fd, struct sockaddr *addr, socklen_t *addr_len)
 
 int Write(int fd, const void *buf, size_t n)
 {
-  if (write(fd, buf, n) == -1)
+  if (write(fd, buf, n) == -1) {
     err_msg("write error\n");
+    return -1;
+  }
 
   return 0;
 }
 
 int Close(int fd)
 {
-  if (close(fd) == -1)
+  if (close(fd) == -1) {
     err_msg("close error\n");
+    return -1;
+  }
 
   return 0;
 }
