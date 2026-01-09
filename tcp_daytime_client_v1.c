@@ -9,8 +9,7 @@ int main(int argc, char** argv)
   if (argc != 2)
     err_quit("Usage: %s <IP address>\n", argv[0]);
 
-  if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
-    err_sys("socket error\n");
+  sockfd = Socket(AF_INET, SOCK_STREAM, 0);
 
   memset(&serv_addr, 0, sizeof(serv_addr));
   serv_addr.sin_family = AF_INET;
@@ -22,8 +21,7 @@ int main(int argc, char** argv)
   }
   serv_addr.sin_port = htons(DAYTIME_PORT);
 
-  if (connect(sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1)
-    err_sys("connect error\n");
+  Connect(sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
 
   while ((n = read(sockfd, buf, MAXLINE)) > 0) {
     buf[n] = '\0';
