@@ -2,27 +2,27 @@
 
 int main(void)
 {
-  int sockfd, opt, connfd;
+  int listenfd, opt, connfd;
   time_t tick;
   char buf[MAXLINE + 1];
   struct sockaddr_in serv_addr;
 
-  sockfd = Socket(AF_INET, SOCK_STREAM, 0);
+  listenfd = Socket(AF_INET, SOCK_STREAM, 0);
 
   opt = 1;
-  Setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+  Setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
 
   memset(&serv_addr, 0, sizeof(serv_addr));
   serv_addr.sin_family = AF_INET;
   serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
   serv_addr.sin_port = htons(DAYTIME_PORT);
 
-  Bind(sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
+  Bind(listenfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
 
-  Listen(sockfd, LISTENQ);
+  Listen(listenfd, LISTENQ);
 
   for (;;) {
-    connfd = Accept(sockfd, NULL, NULL);
+    connfd = Accept(listenfd, NULL, NULL);
 
     tick = time(NULL);
     snprintf(buf, MAXLINE, "%s", ctime(&tick));
