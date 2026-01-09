@@ -12,7 +12,7 @@ int main(int argc, char** argv)
   if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
     err_sys("socket error\n");
 
-  bzero(&serv_addr, sizeof(serv_addr));
+  memset(&serv_addr, 0, sizeof(serv_addr));
   serv_addr.sin_family = AF_INET;
   if ((s = inet_pton(AF_INET, argv[1], &serv_addr.sin_addr)) <= 0) {
     if (s == 0)

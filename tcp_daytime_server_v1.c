@@ -17,7 +17,7 @@ int main(int argc, char** argv)
   if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1)
     err_sys("setsockopt error SO_REUSEADDR\n");
 
-  bzero(&serv_addr, sizeof(serv_addr));
+  memset(&serv_addr, 0, sizeof(serv_addr));
   serv_addr.sin_family = AF_INET;
   if ((s = inet_pton(AF_INET, argv[1], &serv_addr.sin_addr)) <= 0) {
     if (s == 0)
