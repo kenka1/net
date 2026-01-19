@@ -19,7 +19,7 @@ int main(int argc, char** argv)
     else
       err_sys("inet_pton error\n");
   }
-  serv_addr.sin6_port = htons(DAYTIME_PORT);
+  serv_addr.sin6_port = htons(IPPORT_DAYTIME);
 
   Connect(sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
 

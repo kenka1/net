@@ -15,7 +15,7 @@ int main(void)
   memset(&serv_addr, 0, sizeof(serv_addr));
   serv_addr.sin6_family = AF_INET6;
   serv_addr.sin6_addr = in6addr_any;
-  serv_addr.sin6_port =  htons(DAYTIME_PORT);
+  serv_addr.sin6_port =  htons(IPPORT_DAYTIME);
 
   Bind(listenfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
 
