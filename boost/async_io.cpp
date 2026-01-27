@@ -17,9 +17,7 @@ static void Read(char* buf, std::size_t size)
       if (ec)
         fprintf(stderr, "read error: %s\n", ec.what().c_str());
       else
-        Read(buf, size);
-      // else
-      //   Write(buf, n);
+        Write(buf, n);
     }
   );
 
