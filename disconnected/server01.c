@@ -13,15 +13,14 @@ int main()
   addr_len = sizeof(addr);
   sockfd = Accept(listenfd, (struct sockaddr*)&addr, &addr_len);
 
-  for (;;) {
-    n = readn(sockfd, buf, sizeof(buf));
-    if (n <= 0 || n != sizeof(buf))
-      err_sys("read");
+  n = read(sockfd, buf, sizeof(buf));
+  if (n <= 0)
+    err_sys("read error:\n");
 
-    sleep(5);
+  n = writen(sockfd, buf, n);
+  if (n <= 0)
+    err_sys("write error:\n");
 
-    n = writen(sockfd, buf, sizeof(buf));
-    if (n <= 0 || n != sizeof(buf))
-      err_sys("write");
-  }
+  Close(sockfd);
+  Close(listenfd);
 }

@@ -13,13 +13,24 @@ int main()
   while (fgets(buf, 128, stdin) != NULL) {
     n = writen(sockfd, buf, strlen(buf));
     if (n <= 0)
-      err_sys("write");
+      err_sys("write error:\n");
 
-    n = readn(sockfd, buf, sizeof(buf));
+    n = read(sockfd, buf, sizeof(buf));
     if (n <= 0)
-      err_sys("read");
+      err_sys("read error:\n");
 
     buf[127] = '\0';
-    printf("[%s]\n", buf);
+    printf("%s\n", buf);
+
+    printf("sleeping\n");
+    sleep(2);
+
+    /* Here we get an error because server already closed the connection */
+    printf("try to read\n");
+    n = read(sockfd, buf, sizeof(buf));
+    if (n <= 0)
+      err_sys("read error:\n");
+
+    break;
   }
 }

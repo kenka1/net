@@ -1,20 +1,24 @@
 #include "net.h"
 
-int make_sockaddr_in(struct sockaddr_in *addr, socklen_t len, const char *ip, const char *port)
+int make_sockaddr_in(struct sockaddr_in *addr, socklen_t len, const char *host, const char *service)
 {
   long res;
   char *endptr;
 
-  memset(&addr, 0, len);
+  memset(addr, 0, len);
   addr->sin_family = AF_INET;
 
-  if (!inet_pton(AF_INET, ip, &addr->sin_addr)) {
-    fprintf(stderr, "Invalid address\n");
-    return -1;
+  if (host) {
+    if (!inet_pton(AF_INET, host, &addr->sin_addr)) {
+      fprintf(stderr, "Invalid address\n");
+      return -1;
+    }
+  } else {
+    addr->sin_addr.s_addr = htonl(INADDR_ANY);
   }
   
   errno = 0;
-  res = strtol(port, &endptr, 10);
+  res = strtol(service, &endptr, 10);
   if (*endptr || errno || res < 0 || res >= 65535)
     err_sys("Invalid port\n");
   addr->sin_port = htons(res);
@@ -26,8 +30,6 @@ int listen_socket(const char *host, const char *service)
 {
   struct sockaddr_in addr;
   int listenfd;
-  long res;
-  char *endptr;
   const int opt = 1;
 
   listenfd = Socket(AF_INET, SOCK_STREAM, 0);
