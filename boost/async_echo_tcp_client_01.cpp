@@ -1,8 +1,4 @@
 #include "net.hpp"
-#include <boost/asio/posix/stream_descriptor.hpp>
-#include <cstdio>
-#include <cstdlib>
-#include <unistd.h>
 
 class Session : public std::enable_shared_from_this<Session> {
 public:
@@ -39,12 +35,10 @@ private:
 
   void ReadNet()
   {
-    printf("ReadNet()\n");
     socket_.async_read_some(
       net::mutable_buffer{user_buf_.data(), user_buf_.size()},
       [this](const boost::system::error_code& ec, std::size_t size)
       {
-        printf("read %ld bytes from network\n", size);
         if (ec) {
           std::fprintf(stderr, "read error: %s\n", ec.what().c_str());
           Close();
@@ -58,12 +52,10 @@ private:
 
   void ReadIn()
   {
-    printf("ReadIn()\n");
     fd_in_.async_read_some(
       net::mutable_buffer{net_buf_.data(), net_buf_.size()},
       [this](const boost::system::error_code& ec, std::size_t size)
       {
-        printf("read %ld bytes from input\n", size);
         if (ec) {
           std::fprintf(stderr, "read error: %s\n", ec.what().c_str());
           Close();
@@ -77,12 +69,10 @@ private:
 
   void WriteNet()
   {
-    printf("WriteNet()\n");
     socket_.async_write_some(
       net::const_buffer{net_buf_.data(), net_size_},
       [this](const boost::system::error_code& ec, std::size_t size)
       {
-        printf("write %ld bytes to network\n", size);
         if (ec) {
           std::fprintf(stderr, "write error: %s\n", ec.what().c_str());
           Close();
@@ -99,12 +89,10 @@ private:
 
   void WriteOut()
   {
-    printf("WriteOut()\n");
     fd_out_.async_write_some(
       net::const_buffer{user_buf_.data(), user_size_},
       [this](const boost::system::error_code& ec, std::size_t size)
       {
-        printf("write %ld bytes to console\n", size);
         if (ec) {
           std::fprintf(stderr, "write error: %s\n", ec.what().c_str());
           Close();
@@ -146,8 +134,11 @@ int main(int argc, char** argv)
     std::fprintf(stderr, "Usage %s <ip>\n", argv[0]);
     return EXIT_FAILURE;
   }
-  
+
   net::io_context io{};
+
+  net::signal_set signals(io, SIGINT, SIGTERM);
+  signals.async_wait([&io](auto, auto){io.stop();});
 
   boost::system::error_code ec;
   auto addr = ip::make_address_v4(argv[1], ec);

@@ -1,5 +1,9 @@
 #include "net.h"
 
+/*===========================*/
+/* Wrappers for system calls */
+/*===========================*/
+
 int Socket(int domain, int type, int protocol)
 {
   int fd;
@@ -49,7 +53,7 @@ int Accept(int fd, struct sockaddr *addr, socklen_t *addr_len)
 
   sockfd = accept(fd, addr, addr_len);
   if (sockfd == -1)
-    err_sys("connect error");
+    err_sys("connect error\n");
 
   return sockfd;
 }
@@ -69,6 +73,32 @@ int Close(int fd)
   if (close(fd) == -1) {
     err_msg("close error\n");
     return -1;
+  }
+
+  return 0;
+}
+
+/*==========*/
+/* Wrappers */
+/*=========+*/
+
+int Inet_ntop(int af, const void *cp, char *buf, socklen_t len)
+{
+  if (inet_ntop(af, cp, buf, len) == NULL)
+    err_sys("inet_ntop error\n");
+  return 0;
+}
+
+int Inet_pton(int af, const char *cp, void *buf)
+{
+  int res;
+
+  res = inet_pton(af, cp, buf); 
+  if (res <= 0) {
+    if (res == 0)
+      err_quit("Invalid ip\n");
+    else
+      err_sys("inet_pton error\n");
   }
 
   return 0;

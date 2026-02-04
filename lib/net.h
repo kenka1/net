@@ -31,11 +31,20 @@ int Accept(int fd, struct sockaddr *addr, socklen_t *addr_len);
 int Write(int fd, const void *buf, size_t n);
 int Close(int fd);
 
+/*==========*/
+/* Wrappers */
+/*=========+*/
+
+int Inet_ntop(int af, const void *cp, char *buf, socklen_t len);
+int Inet_pton(int af, const char *cp, void *buf);
+
 /*=====*/
 /* TCP */
 /*=====*/
 
-int listen_socket(const char* addr, const char* port);
+int make_sockaddr_in(struct sockaddr_in *addr, socklen_t len, const char *host, const char *service);
+int listen_socket(const char *host, const char *service);
+int connect_to_server(const char *host, const char *service);
 
 /* Read SIZE bytes untill one of the following events occurs:
  * 1) SIZE bytes have been read
@@ -49,11 +58,19 @@ ssize_t readn(int fd, void *buf, size_t size);
  * */
 ssize_t read_size(int fd, void *buf, size_t size);
 
+ssize_t writen(int fd, void *buf, size_t size);
+
+/*=====*/
+/* UDP */
+/*=====*/
+
+int udp_client(const char *host, const char *service);
+
 /*================================*/
 /* Protocol-independent functions */
 /*================================*/
 
-char *sock_ntop(struct sockaddr *addr, socklen_t len);
+char* sock_ntop(struct sockaddr *addr, socklen_t len);
 
 /*================*/
 /* Error handlers */

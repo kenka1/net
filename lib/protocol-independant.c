@@ -2,7 +2,7 @@
 
 static char buf4[INET_ADDRSTRLEN];
 
-char *sock_ntop(struct sockaddr *addr, socklen_t len)
+char* sock_ntop(struct sockaddr *addr, socklen_t len)
 {
   switch (addr->sa_family) {
     case AF_INET:

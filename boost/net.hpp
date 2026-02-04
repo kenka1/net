@@ -7,6 +7,8 @@
 #include <unordered_map>
 #include <atomic>
 #include <thread>
+#include <iostream>
+#include <exception>
 
 #include <boost/asio.hpp>
 #include <boost/beast.hpp>

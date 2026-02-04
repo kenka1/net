@@ -132,10 +132,11 @@ void Session::Close()
 
 int main()
 {
-  // FIX SIGNALS
-
   int io_threads = std::max(1, Config::IO_THREADS);
   net::io_context io{io_threads};
+
+  net::signal_set signals(io, SIGINT, SIGTERM);
+  signals.async_wait([&io](auto, auto){io.stop();});
 
   // Run server
   Server server{io, tcp::endpoint{tcp::v4(), Config::PORT}};
