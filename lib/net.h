@@ -10,6 +10,8 @@
 #include <time.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/select.h>
+#include <assert.h>
 
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -44,12 +46,16 @@ int Inet_pton(int af, const char *cp, void *buf);
 
 int make_sockaddr_in(struct sockaddr_in *addr, socklen_t len, const char *host, const char *service);
 int listen_socket(const char *host, const char *service);
+
+/* Connect to specific host and service
+ * return socket or terminate program if error occured
+ * */
 int connect_to_server(const char *host, const char *service);
 
-/* Read SIZE bytes untill one of the following events occurs:
+/* Read SIZE bytes untill one of the following events occured:
  * 1) SIZE bytes have been read
  * 2) EOF(end of file) have been received
- * 3) An error has occures
+ * 3) An error has occured
  * */
 ssize_t readn(int fd, void *buf, size_t size);
 

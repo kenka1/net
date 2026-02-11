@@ -1,0 +1,31 @@
+socket(7)                                                                                                                                  Miscellaneous Information Manual                                                                                                                                  socket(7)
+
+NAME
+       socket - Linux socket interface
+
+SYNOPSIS
+       #include <sys/socket.h>
+
+       sockfd = socket(int socket_family, int socket_type, int protocol);
+
+DESCRIPTION
+       This manual page describes the Linux networking socket layer user interface.  The BSD compatible sockets are the uniform interface between the user process and the network protocol stacks in the kernel.  The protocol modules are grouped into protocol families such as AF_INET, AF_IPX, and AF_PACKET, and
+       socket types such as SOCK_STREAM or SOCK_DGRAM.  See socket(2) for more information on families and types.
+
+   Socket-layer functions
+       These functions are used by the user process to send or receive packets and to do other socket operations.  For more information, see their respective manual pages.
+
+       socket(2) creates a socket, connect(2) connects a socket to a remote socket address, the bind(2) function binds a socket to a local socket address, listen(2) tells the socket that new connections shall be accepted, and accept(2) is used to get a new socket with a new incoming connection.  socketpair(2)
+       returns two connected anonymous sockets (implemented only for a few local families like AF_UNIX)
+
+       send(2),  sendto(2), and sendmsg(2) send data over a socket, and recv(2), recvfrom(2), recvmsg(2) receive data from a socket.  poll(2) and select(2) wait for arriving data or a readiness to send data.  In addition, the standard I/O operations like write(2), writev(2), sendfile(2), read(2), and readv(2)
+       can be used to read and write data.
+
+       getsockname(2) returns the local socket address and getpeername(2) returns the remote socket address.  getsockopt(2) and setsockopt(2) are used to set or get socket layer or protocol options.  ioctl(2) can be used to set or read some other options.
+
+       close(2) is used to close a socket.  shutdown(2) closes parts of a full-duplex socket connection.
+
+       Seeking, or calling pread(2) or pwrite(2) with a nonzero position is not supported on sockets.
+
+       It is possible to do nonblocking I/O on sockets by setting the O_NONBLOCK flag on a socket file descriptor using fcntl(2).  Then all operations that would block will (usually) return with EAGAIN (operation should be retried later); connect(2) will return EINPROGRESS error.  The user can then  wait  for
+       various events via poll(2) or select(2).
