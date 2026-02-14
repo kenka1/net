@@ -58,14 +58,26 @@ int Accept(int fd, struct sockaddr *addr, socklen_t *addr_len)
   return sockfd;
 }
 
-int Write(int fd, const void *buf, size_t n)
+ssize_t Read(int fd, void *buf, size_t count)
 {
-  if (write(fd, buf, n) == -1) {
-    err_msg("write error\n");
-    return -1;
-  }
+  ssize_t n;
 
-  return 0;
+  n = read(fd, buf, count);
+  if (n == -1)
+    err_sys("read error\n");
+
+  return n;
+}
+
+ssize_t Write(int fd, const void *buf, size_t count)
+{
+  ssize_t n;
+
+  n = write(fd, buf, count);
+  if (n == -1)
+    err_sys("write error\n");
+
+  return n;
 }
 
 int Close(int fd)
@@ -76,6 +88,17 @@ int Close(int fd)
   }
 
   return 0;
+}
+
+pid_t Fork()
+{
+  pid_t pid;
+
+  pid = fork();
+  if (pid == -1)\
+    err_sys("fork error\n");
+
+  return pid;
 }
 
 /*==========*/

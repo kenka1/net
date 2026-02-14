@@ -30,8 +30,10 @@ int Bind(int fd, const struct sockaddr *addr, socklen_t len);
 int Connect(int fd, const struct sockaddr *addr, socklen_t len);
 int Listen(int fd, int n);
 int Accept(int fd, struct sockaddr *addr, socklen_t *addr_len);
-int Write(int fd, const void *buf, size_t n);
 int Close(int fd);
+ssize_t Read(int fd, void *buf, size_t count);
+ssize_t Write(int fd, const void *buf, size_t n);
+pid_t Fork(void);
 
 /*==========*/
 /* Wrappers */
